@@ -8,7 +8,9 @@
 import SwiftUI
 
 struct BookDetailView: View {
-    var book: Book
+    
+    
+    @Binding var book: Book
     
     var body: some View {
         
@@ -34,6 +36,7 @@ struct BookDetailView: View {
     
         
     }
+        
 }
 
 //#Preview {
