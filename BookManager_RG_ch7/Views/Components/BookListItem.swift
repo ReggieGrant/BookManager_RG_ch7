@@ -21,12 +21,18 @@ struct BookListItem: View {
             VStack(alignment: .leading){
                 
                 
-                    Text(book.title)
-                        .font(.headline)
+                Text(book.title)
+                    .font(.headline)
+                if(!book.author.isEmpty){
                     Text("by \(book.author)")
                         .font(.subheadline)
                         .foregroundStyle(.secondary)
+                    StarRatingView(rating: book.rating)
                 }
+                if(book.rating >= 1){
+                    StarRatingView(rating: book.rating)
+                }
+            }
             }
         }
     }

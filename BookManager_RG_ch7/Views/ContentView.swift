@@ -34,8 +34,7 @@ struct ContentView: View {
                     books.append(newBook)
                 }
                 newBook = Book(title:"",author:"", summary:"", cover:"lotr_fellowship")
-            }
-                content:{
+            } content:{
                     AddEditView(book: $newBook)                }
                 
                 
