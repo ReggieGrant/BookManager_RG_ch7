@@ -16,4 +16,6 @@ struct Book: Identifiable{
     
     var rating: Int = 0
     var review: String = ""
+    
+    var isFavorite: Bool = false
 }

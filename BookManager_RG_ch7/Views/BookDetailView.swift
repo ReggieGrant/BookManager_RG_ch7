@@ -31,6 +31,10 @@ struct BookDetailView: View {
                                 .foregroundColor(.secondary)
                         }
                     }
+                    HStack{
+                        Spacer()
+                        FavoriteToggle(isFavorite: $book.isFavorite)
+                    }
                     
                 }
                 .frame(maxWidth: .infinity)
