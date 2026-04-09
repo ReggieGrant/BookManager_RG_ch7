@@ -18,6 +18,8 @@ struct AddEditView: View {
     @State var summary: String = ""
     @State var rating: Int = 0
     @State var review: String = ""
+    @State var genre: Genre = .unknown
+    @State var readingStatus: ReadingStatus = .unknown
     
     @State var cover: String = "lotr_fellowship"
     
@@ -28,6 +30,8 @@ struct AddEditView: View {
         self._summary = .init(wrappedValue:book.wrappedValue.summary)
         self._rating = .init(wrappedValue:book.wrappedValue.rating)
         self._review = .init(wrappedValue:book.wrappedValue.review)
+        self._genre = .init(wrappedValue: book.wrappedValue.genre)
+        self._readingStatus = .init(wrappedValue: book.wrappedValue.readingStatus)
         self._cover = .init(wrappedValue:book.wrappedValue.cover)
     }
     
@@ -39,6 +43,12 @@ struct AddEditView: View {
                     TextField("Author", text: $author)
                     TextEditor(text: $summary)
                         .frame(height: 150)
+                    Picker("Genre",selection: $genre){
+                        ForEach(Genre.allCases, id:\.self){ genre in
+                            Text(genre.rawValue).tag(genre)
+                            
+                        }
+                    }
                     Picker("Cover", selection: $cover){
                         Text("The Fellowship of The Ring").tag("lotr_fellowship")
                         Text("The Two Towers").tag("lotr_towers")
@@ -46,6 +56,12 @@ struct AddEditView: View {
                     }
                 }
                 Section(header: Text("My Review")){
+                    Picker("Reading Status",selection: $readingStatus){
+                        ForEach(ReadingStatus.allCases, id:\.self){ readingStatus in
+                            Text(readingStatus.rawValue).tag(readingStatus)
+                            
+                        }
+                    }
                     Picker("Rating", selection: $rating){
                         Text("No Rating selected...").tag(0)
                         ForEach(1...5, id: \.self){ num in
@@ -67,6 +83,8 @@ struct AddEditView: View {
                         book.rating = rating
                         book.review = review
                         book.cover = cover
+                        book.genre = genre
+                        book.readingStatus = readingStatus
                         dismiss()
                     }.disabled(title.isEmpty)
                 }

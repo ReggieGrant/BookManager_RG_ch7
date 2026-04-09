@@ -6,9 +6,21 @@
 //
 
 
-func filterFavoriteBooks(book:[Book])->[Book]{
+func filterFavoriteBooks(
+    book:[Book],
+    genre:Genre? = nil,
+    readingStatus: ReadingStatus? = nil
+)->[Book]{
     
     return book.filter{
         $0.isFavorite
+        && (
+            genre == nil
+            || $0.genre == genre
+        ) && (
+            readingStatus == nil
+            || $0.readingStatus == readingStatus
+        )
+        
     }
 }

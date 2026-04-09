@@ -12,13 +12,21 @@ struct FavoriteView: View {
     
     @Binding var books: [Book]
     
+    @State var selectedGenre: Genre? = nil
+    @State var selectedReadingStatus: ReadingStatus? = nil
+    @State var showFilters: Bool = false
+    
+    @AppStorage("SETTINGS_GRID_COLUMNS_KEY") private var gridColumns: Int = 2
+    
     // Computed Property
     private var favoriteBooks: [Book] {
-        filterFavoriteBooks(book: books)
+        filterFavoriteBooks(book: books, genre: selectedGenre,
+readingStatus: selectedReadingStatus)
     }
     
     private var gridLayout: [GridItem]{
-        [GridItem(.flexible()),GridItem(.flexible())]
+//        [GridItem(.flexible()),GridItem(.flexible())]
+        Array(repeating: GridItem(.flexible()), count: gridColumns)
     }
     
     
@@ -38,6 +46,17 @@ struct FavoriteView: View {
                         .padding()
                     }
                 }
-            }.navigationTitle("Favorite Books")        }
+            }.navigationTitle("Favorite Books")
+                .navigationBarItems(leading: Button("Filter"){
+                    
+                    showFilters.toggle()
+                })
+                .sheet(isPresented: $showFilters,
+                       content:{
+                    FilterView(selectedGenre: $selectedGenre, selectedReadingStatus: $selectedReadingStatus)
+                }
+                )
+          
+        }
     }
 }

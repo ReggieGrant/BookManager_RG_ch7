@@ -18,4 +18,11 @@ struct Book: Identifiable{
     var review: String = ""
     
     var isFavorite: Bool = false
+    
+    // Genre
+    var genre: Genre = .unknown
+    // Reading status
+    var readingStatus: ReadingStatus = .unknown
+    
+    
 }
