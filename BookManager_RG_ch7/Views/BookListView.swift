@@ -15,12 +15,15 @@ struct BookListView: View {
     @State private var showAddBook: Bool = false
     @State private var newBook = Book(title:"", author: "", summary: "", cover: "lotr_fellowship")
     
+    @AppStorage("SETTINGS_FONT_SIZE_KEY") private var fontSize: Double = 16.0
+    
     var body: some View {
         NavigationStack{
             
             List($books){ book in
                 NavigationLink(destination: BookDetailView(book: book)) {
                     BookListItem(book: book.wrappedValue)
+                    
                 }
                 
                 
@@ -40,5 +43,6 @@ struct BookListView: View {
             }
             
         }
+        .font(.system(size: fontSize))
     }
 }

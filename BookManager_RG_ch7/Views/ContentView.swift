@@ -14,6 +14,7 @@ struct ContentView: View {
     @State private var books = getBooks()
     
     @AppStorage("SETTINGS_APPERANCE_THEME_KEY") private var theme: Theme = .system
+    @AppStorage("SETTINGS_FONT_SIZE_KEY") private var fontSize: Double = 16.0
     
     private var currentTheme: ColorScheme? {
         switch theme {
@@ -43,7 +44,7 @@ struct ContentView: View {
                 }
         }
         .preferredColorScheme(currentTheme)
-                
+        .font(.system(size: fontSize))
     }
     
 }
