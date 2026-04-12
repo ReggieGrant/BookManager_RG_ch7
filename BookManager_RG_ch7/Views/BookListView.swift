@@ -7,22 +7,24 @@
 
 
 import SwiftUI
+import SwiftData
 
 struct BookListView: View {
     
-    @Binding var books: [Book]
+    @Query var books: [PersistentBook]
     
     @State private var showAddBook: Bool = false
-    @State private var newBook = Book(title:"", author: "", summary: "", cover: "lotr_fellowship")
+    @Environment(\.modelContext) private var modelContext
+  
     
     @AppStorage("SETTINGS_FONT_SIZE_KEY") private var fontSize: Double = 16.0
     
     var body: some View {
         NavigationStack{
             
-            List($books){ book in
+            List(books){ book in
                 NavigationLink(destination: BookDetailView(book: book)) {
-                    BookListItem(book: book.wrappedValue)
+                    BookListItem(book: book)
                     
                 }
                 
@@ -33,12 +35,7 @@ struct BookListView: View {
                 showAddBook.toggle()
             })
             .sheet(isPresented: $showAddBook){
-                if(!newBook.title.isEmpty){
-                    books.append(newBook)
-                }
-                newBook = Book(title:"",author:"", summary:"", cover:"lotr_fellowship")
-            } content:{
-                AddEditView(book: $newBook)
+                AddEditView(modelContext: modelContext)
                 
             }
             

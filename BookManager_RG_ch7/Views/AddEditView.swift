@@ -6,10 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct AddEditView: View {
     
-    @Binding var book: Book
+    var book: PersistentBook?
+    private var modelContext: ModelContext
     
     @Environment(\.dismiss) var dismiss
     
@@ -21,18 +23,21 @@ struct AddEditView: View {
     @State var genre: Genre = .unknown
     @State var readingStatus: ReadingStatus = .unknown
     
-    @State var cover: String = "lotr_fellowship"
+    @State var coverData: Data? = nil
     
-    init(book: Binding<Book>){
-        self._book = book
-        self._title = .init(wrappedValue:book.wrappedValue.title)
-        self._author = .init(wrappedValue:book.wrappedValue.author)
-        self._summary = .init(wrappedValue:book.wrappedValue.summary)
-        self._rating = .init(wrappedValue:book.wrappedValue.rating)
-        self._review = .init(wrappedValue:book.wrappedValue.review)
-        self._genre = .init(wrappedValue: book.wrappedValue.genre)
-        self._readingStatus = .init(wrappedValue: book.wrappedValue.readingStatus)
-        self._cover = .init(wrappedValue:book.wrappedValue.cover)
+    init(book: PersistentBook? = nil, modelContext: ModelContext){
+        self.book = book
+        self.modelContext = modelContext
+        if let book = book {
+            self._title = .init(wrappedValue: book.title)
+            self._author = .init(wrappedValue: book.author)
+            self._summary = .init(wrappedValue: book.summary)
+            self._rating = .init(wrappedValue: book.rating)
+            self._review = .init(wrappedValue: book.review)
+            self._genre = .init(wrappedValue: book.genre)
+            self._readingStatus = .init(wrappedValue: book.readingStatus)
+            self._coverData = .init(wrappedValue: book.coverData)
+        }
     }
     
     var body: some View {
@@ -49,11 +54,8 @@ struct AddEditView: View {
                             
                         }
                     }
-                    Picker("Cover", selection: $cover){
-                        Text("The Fellowship of The Ring").tag("lotr_fellowship")
-                        Text("The Two Towers").tag("lotr_towers")
-                        Text("The Return Of The King").tag("lotr_king")
-                    }
+
+                    
                 }
                 Section(header: Text("My Review")){
                     Picker("Reading Status",selection: $readingStatus){
@@ -61,6 +63,7 @@ struct AddEditView: View {
                             Text(readingStatus.rawValue).tag(readingStatus)
                             
                         }
+                        ImageField(data: $coverData)
                     }
                     Picker("Rating", selection: $rating){
                         Text("No Rating selected...").tag(0)
@@ -72,19 +75,34 @@ struct AddEditView: View {
                         .frame(height: 150)
                 }
             }
-            .navigationTitle(book.title.isEmpty ? "Add Book": "Edit Book")
+            .navigationTitle(book == nil ? "Add Book": "Edit Book")
             .navigationBarTitleDisplayMode(.inline)
             .toolbar{
                 ToolbarItem(placement: .confirmationAction){
                     Button("Save"){
-                        book.title = title
-                        book.author = author
-                        book.summary = summary
-                        book.rating = rating
-                        book.review = review
-                        book.cover = cover
-                        book.genre = genre
-                        book.readingStatus = readingStatus
+                        let isNewBook = book == nil
+                        let bookToSave = book ?? PersistentBook(title:"")
+                        
+                        
+                        bookToSave.title = title
+                        bookToSave.author = author
+                        bookToSave.summary = summary
+                        bookToSave.rating = rating
+                        bookToSave.review = review
+                        
+                        bookToSave.genre = genre
+                        bookToSave.readingStatus = readingStatus
+                        if(coverData != nil){
+                            bookToSave.coverData = coverData
+                        }
+                        if isNewBook {
+                            modelContext.insert(bookToSave)
+                        }
+                        do{
+                           try modelContext.save()
+                        } catch {
+                            print("Could not save book: \(error)")
+                        }
                         dismiss()
                     }.disabled(title.isEmpty)
                 }

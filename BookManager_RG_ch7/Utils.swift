@@ -7,10 +7,10 @@
 
 
 func filterFavoriteBooks(
-    book:[Book],
+    book:[PersistentBook],
     genre:Genre? = nil,
     readingStatus: ReadingStatus? = nil
-)->[Book]{
+)->[PersistentBook]{
     
     return book.filter{
         $0.isFavorite

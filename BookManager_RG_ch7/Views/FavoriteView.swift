@@ -6,11 +6,12 @@
 //
 
 import SwiftUI
+import SwiftData
 
 
 struct FavoriteView: View {
     
-    @Binding var books: [Book]
+    @Query var books: [PersistentBook]
     
     @State var selectedGenre: Genre? = nil
     @State var selectedReadingStatus: ReadingStatus? = nil
@@ -19,7 +20,7 @@ struct FavoriteView: View {
     @AppStorage("SETTINGS_GRID_COLUMNS_KEY") private var gridColumns: Int = 2
     
     // Computed Property
-    private var favoriteBooks: [Book] {
+    private var favoriteBooks: [PersistentBook] {
         filterFavoriteBooks(book: books, genre: selectedGenre,
 readingStatus: selectedReadingStatus)
     }

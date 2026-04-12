@@ -9,7 +9,7 @@ import SwiftUI
 
 struct SquareCardView: View {
     
-    var book: Book
+    var book: PersistentBook
     
     var body: some View {
         VStack{
@@ -43,7 +43,7 @@ struct SquareCardView: View {
         }
         .frame(width:.infinity,height: .infinity)
         .background(
-            Image(book.cover)
+            Image(uiImage:book.cover)
                 .resizable()
                 .scaledToFill()
         )
@@ -52,7 +52,7 @@ struct SquareCardView: View {
     }
 }
 
-#Preview {
-    let book = getBooks()
-    SquareCardView(book: book[0])
-}
+//#Preview {
+//    let book = getBooks()
+//    SquareCardView(book: book[0])
+//}

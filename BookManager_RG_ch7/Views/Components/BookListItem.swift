@@ -9,12 +9,12 @@ import SwiftUI
 
 struct BookListItem: View {
     
-    var book: Book
+    var book: PersistentBook
     
     var body: some View {
         
         HStack{
-            Image(book.cover)
+            Image(uiImage:book.cover)
                 .resizable()
                 .scaledToFit()
                 .frame(width: 60, height: 80)

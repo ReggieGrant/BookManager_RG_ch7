@@ -5,7 +5,7 @@
 //  Created by Reginald Grant on 4/8/26.
 //
 
-enum Genre: String, CaseIterable {
+enum Genre: String, CaseIterable, Codable {
     case fantasy = "Fantasy"
     case horror = "Horror"
     case romance = "Romance"

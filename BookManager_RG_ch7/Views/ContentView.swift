@@ -11,7 +11,7 @@ import SwiftData
 struct ContentView: View {
     
    
-    @State private var books = getBooks()
+
     
     @AppStorage("SETTINGS_APPERANCE_THEME_KEY") private var theme: Theme = .system
     @AppStorage("SETTINGS_FONT_SIZE_KEY") private var fontSize: Double = 16.0
@@ -30,11 +30,11 @@ struct ContentView: View {
     var body: some View {
         
         TabView{
-            BookListView(books:$books)
+            BookListView()
                 .tabItem{
                     Label("Books", systemImage: "books.vertical.fill")
                 }
-            FavoriteView(books: $books)
+            FavoriteView()
                 .tabItem{
                     Label("Favorites", systemImage: "heart.fill")
                 }
@@ -54,7 +54,7 @@ struct ContentView: View {
     
 
 
-#Preview {
-    ContentView()
-        
-}
+//#Preview {
+//    ContentView()
+//        
+//}
