@@ -55,6 +55,16 @@ struct ContentView: View {
 
 
 //#Preview {
+//    var modelContainer: ModelContainer = try! ModelContainer(
+//        for: PersistentBook.self,
+//        configurations:ModelConfiguration(isStoredInMemoryOnly: true)
+//    )
+//    let mockBook = PersistentBook(title: "Title of thr book")
+//    modelContainer.mainContext
+//    
 //    ContentView()
+//        .modelContainer(modelContainer)
 //        
 //}
+//
+//func addMockBook(book:PersistentBook)

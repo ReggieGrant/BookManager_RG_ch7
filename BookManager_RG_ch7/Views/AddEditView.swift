@@ -1,6 +1,6 @@
 //
 //  AddEditView.swift
-//  BookManager_RG_ch7
+//  BookManager_RG_ch7https://sdgku.instructure.com/courses/2655/modules
 //
 //  Created by Reginald Grant on 3/24/26.
 //

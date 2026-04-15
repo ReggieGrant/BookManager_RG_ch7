@@ -26,7 +26,7 @@ class PersistentBook {
         title: String,
         author: String = "",
         summary: String = "",
-//        cover: String,
+        coverData: Data? = nil,
         rating: Int=0,
         review: String="",
         isFavorite: Bool=false,
@@ -36,7 +36,7 @@ class PersistentBook {
         self.title = title
         self.author = author
         self.summary = summary
-//        self.cover = cover
+        self.coverData = coverData
         self.rating = rating
         self.review = review
         self.isFavorite = isFavorite
