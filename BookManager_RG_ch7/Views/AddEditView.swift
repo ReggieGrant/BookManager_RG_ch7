@@ -10,45 +10,28 @@ import SwiftData
 
 struct AddEditView: View {
     
-    var book: PersistentBook?
-    private var modelContext: ModelContext
+    @StateObject private var viewModel: AddEditViewModel
     
     @Environment(\.dismiss) var dismiss
     
-    @State var title: String = ""
-    @State var author: String = ""
-    @State var summary: String = ""
-    @State var rating: Int = 0
-    @State var review: String = ""
-    @State var genre: Genre = .unknown
-    @State var readingStatus: ReadingStatus = .unknown
-    
-    @State var coverData: Data? = nil
     
     init(book: PersistentBook? = nil, modelContext: ModelContext){
-        self.book = book
-        self.modelContext = modelContext
-        if let book = book {
-            self._title = .init(wrappedValue: book.title)
-            self._author = .init(wrappedValue: book.author)
-            self._summary = .init(wrappedValue: book.summary)
-            self._rating = .init(wrappedValue: book.rating)
-            self._review = .init(wrappedValue: book.review)
-            self._genre = .init(wrappedValue: book.genre)
-            self._readingStatus = .init(wrappedValue: book.readingStatus)
-            self._coverData = .init(wrappedValue: book.coverData)
-        }
+        _viewModel = StateObject(wrappedValue: AddEditViewModel(
+            book: book,
+            modelContext: modelContext
+        ))
+        
     }
     
     var body: some View {
         NavigationStack{
             Form{
                 Section(header: Text("Book Details")){
-                    TextField("Title Of The Book", text: $title)
-                    TextField("Author", text: $author)
-                    TextEditor(text: $summary)
+                    TextField("Title Of The Book", text: $viewModel.title)
+                    TextField("Author", text: $viewModel.author)
+                    TextEditor(text: $viewModel.summary)
                         .frame(height: 150)
-                    Picker("Genre",selection: $genre){
+                    Picker("Genre",selection: $viewModel.genre){
                         ForEach(Genre.allCases, id:\.self){ genre in
                             Text(genre.rawValue).tag(genre)
                             
@@ -58,53 +41,31 @@ struct AddEditView: View {
                     
                 }
                 Section(header: Text("My Review")){
-                    Picker("Reading Status",selection: $readingStatus){
+                    Picker("Reading Status",selection: $viewModel.readingStatus){
                         ForEach(ReadingStatus.allCases, id:\.self){ readingStatus in
                             Text(readingStatus.rawValue).tag(readingStatus)
                             
                         }
-                        ImageField(data: $coverData)
+                        ImageField(data: $viewModel.coverData)
                     }
-                    Picker("Rating", selection: $rating){
+                    Picker("Rating", selection: $viewModel.rating){
                         Text("No Rating selected...").tag(0)
                         ForEach(1...5, id: \.self){ num in
                             Text(String(num)).tag(num)
                         }
                     }
-                    TextEditor(text: $review)
+                    TextEditor(text: $viewModel.review)
                         .frame(height: 150)
                 }
             }
-            .navigationTitle(book == nil ? "Add Book": "Edit Book")
+            .navigationTitle(viewModel.navigationTitle)
             .navigationBarTitleDisplayMode(.inline)
             .toolbar{
                 ToolbarItem(placement: .confirmationAction){
                     Button("Save"){
-                        let isNewBook = book == nil
-                        let bookToSave = book ?? PersistentBook(title:"")
-                        
-                        
-                        bookToSave.title = title
-                        bookToSave.author = author
-                        bookToSave.summary = summary
-                        bookToSave.rating = rating
-                        bookToSave.review = review
-                        
-                        bookToSave.genre = genre
-                        bookToSave.readingStatus = readingStatus
-                        if(coverData != nil){
-                            bookToSave.coverData = coverData
-                        }
-                        if isNewBook {
-                            modelContext.insert(bookToSave)
-                        }
-                        do{
-                           try modelContext.save()
-                        } catch {
-                            print("Could not save book: \(error)")
-                        }
+                        viewModel.saveBook()
                         dismiss()
-                    }.disabled(title.isEmpty)
+                    }.disabled(viewModel.isNotSavable)
                 }
             }
         }
